@@ -46,7 +46,7 @@ final class Plugin_4_Snippets {
 		$files = $this->get_snippets_files( $snippets_dir );
 
 		foreach ( $files as $filepath ) {
-			// include $filepath;
+			include $filepath;
 		}
 	}
 
