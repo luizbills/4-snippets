@@ -6,7 +6,7 @@
  * Plugin URI:   https://github.com/luizbills/4-snippets
  * Author:       Luiz Bills
  * Author URI:   https://github.com/luizbills
- * Text Domain:  wp-codes
+ * Text Domain:  wp-4-snippets
  * Requires PHP: 7.4
  * Update URI:   false
  */
