@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:  4 Snippets
- * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin <code>includes</code> directory. Files that starts with <code>_</code> (underscore) will not be executed.
+ * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin's <code>includes</code> directory. Files that starts with <code>_</code> (underscore) will not be executed.
  * Version:      1.1.0
  * Plugin URI:   https://github.com/luizbills/4-snippets
  * Author:       Luiz Bills
@@ -40,14 +40,13 @@ final class Plugin_4_Snippets {
 
 		include_once self::DIR . '/helpers.php';
 
-		$files = $this->rscandir( self::DIR . '/includes' );
+		$snippets_dir = self::DIR . '/includes/';
+		if ( ! file_exists( $snippets_dir ) ) return;
+
+		$files = $this->get_snippets_files( $snippets_dir );
 
 		foreach ( $files as $filepath ) {
-			$info = pathinfo( $filepath );
-			if ( 'php' !== $info['extension'] ) continue;
-			if ( '_' === substr( $info['filename'], 0, 1 ) ) continue;
-
-			include $filepath;
+			// include $filepath;
 		}
 	}
 
@@ -80,25 +79,31 @@ final class Plugin_4_Snippets {
 	}
 
 	/**
-	 * Scan all files in a directory and its subdirectories
+	 * Find PHP files inside a directory and its subdirectories,
+	 * but ignore files or folders thats starts with _ (undescore).
 	 *
 	 * @param string $dir
-	 * @return string[] files paths
+	 * @return string[] List of file paths
 	 */
-	protected function rscandir ( $dir ) {
+	protected function get_snippets_files ( $dir ) {
 		$files = scandir( $dir );
 		$result = [];
 
-		foreach( $files as $entry ) {
-			if ( '.' === $entry ) continue;
-			if ( '..' === $entry ) continue;
+		foreach( $files as $filename ) {
+			if ( '.' === $filename ) continue;
+			if ( '..' === $filename ) continue;
+			if ( '_' === substr( $filename, 0, 1 ) ) continue;
 
-			$entry = "$dir/$entry";
-			if ( ! is_dir( $entry ) ) {
-				$result[] = $entry;
-			} else {
-				$scandir = $this->rscandir( $entry );
+			$path = path_join( $dir, $filename );
+
+			if ( is_dir( $path ) ) {
+				$scandir = $this->get_snippets_files( $path );
 				$result = $scandir ? array_merge( $result, $scandir ) : $result;
+			} else {
+				$info = pathinfo( $path );
+				if ( 'php' === $info['extension'] ) {
+					$result[] = $path;
+				}
 			}
 		}
 
