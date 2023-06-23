@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  4 Snippets
  * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin's <code>includes</code> directory. Files that starts with <code>_</code> (underscore) will not be executed.
- * Version:      1.1.0
+ * Version:      1.2.0
  * Plugin URI:   https://github.com/luizbills/4-snippets
  * Author:       Luiz Bills
  * Author URI:   https://github.com/luizbills
