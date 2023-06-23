@@ -29,7 +29,7 @@ function err_log ( ...$values ) {
     foreach ( $values as $x ) {
         ob_start();
         var_dump( $x );
-        error_log( ob_get_clean() );
+        error_log( trim( ob_get_clean() ) );
     }
 }
 

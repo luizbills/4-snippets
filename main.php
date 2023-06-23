@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  4 Snippets
  * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin <code>includes</code> directory. Files that starts with <code>_</code> (underscore) will not be executed.
- * Version:      1.0.0
+ * Version:      1.1.0
  * Plugin URI:   https://github.com/luizbills/4-snippets
  * Author:       Luiz Bills
  * Author URI:   https://github.com/luizbills
@@ -13,16 +13,33 @@
 
 defined( 'WPINC' ) || die;
 
-final class WP_Codes {
+final class Plugin_4_Snippets {
 	const FILE = __FILE__;
 	const DIR = __DIR__;
+	const SAFE_MODE_QUERY_ARG = 'disable-snippets';
+	const SAFE_MODE_CONSTANT = 'DISABLE_SNIPPETS';
 
 	public function __construct () {
-		include_once self::DIR . '/helpers.php';
-		add_action( 'plugins_loaded', [ $this, 'include_enabled_codes' ] );
+		if ( $this->is_safe_mode() ) {
+			add_filter( 'home_url', [ $this, 'add_safe_mode_query_arg' ] );
+			add_filter( 'admin_url', [ $this, 'add_safe_mode_query_arg' ] );
+			add_filter( 'login_url', [ $this, 'add_safe_mode_query_arg' ] );
+			add_filter( 'logout_url', [ $this, 'add_safe_mode_query_arg' ] );
+			add_action( 'login_form', [ $this, 'add_safe_mode_login' ] );
+		}
+		add_action( 'plugins_loaded', [ $this, 'execute_codes' ] );
 	}
 
-	public function include_enabled_codes () {
+	/**
+	 * Include and execute all allowed snippets
+	 *
+	 * @return void
+	 */
+	public function execute_codes () {
+		if ( $this->is_safe_mode() ) return;
+
+		include_once self::DIR . '/helpers.php';
+
 		$files = $this->rscandir( self::DIR . '/includes' );
 
 		foreach ( $files as $filepath ) {
@@ -34,6 +51,40 @@ final class WP_Codes {
 		}
 	}
 
+	/**
+	 * @return void
+	 */
+	public function add_safe_mode_login () {
+		?>
+		<input type="hidden" name="<?= esc_attr( self::SAFE_MODE_QUERY_ARG ) ?>" value="">
+		<?php
+	}
+
+	/**
+	 * @param string $url
+	 * @return string
+	 */
+	public function add_safe_mode_query_arg ( $url ) {
+		return add_query_arg( self::SAFE_MODE_QUERY_ARG, '', $url );
+	}
+
+	/**
+	 * @return boolean
+	 */
+	protected function is_safe_mode () {
+		return isset( $_REQUEST[ self::SAFE_MODE_QUERY_ARG ] )
+			|| (
+				defined( self::SAFE_MODE_CONSTANT )
+				&& true === constant( self::SAFE_MODE_CONSTANT )
+			);
+	}
+
+	/**
+	 * Scan all files in a directory and its subdirectories
+	 *
+	 * @param string $dir
+	 * @return string[] files paths
+	 */
 	protected function rscandir ( $dir ) {
 		$files = scandir( $dir );
 		$result = [];
@@ -55,4 +106,4 @@ final class WP_Codes {
 	}
 }
 
-new WP_Codes();
+new Plugin_4_Snippets();
