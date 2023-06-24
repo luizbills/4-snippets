@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:  4 Snippets
- * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin's <code>includes</code> directory. Files that starts with <code>_</code> (underscore) will not be executed.
- * Version:      1.2.0
+ * Description:  Simple plugin for snippets in your development envoriment. Just put the code inside the plugin's <code>includes</code> directory. Files that starts with <code>_</code> (underscore) or <code>.</code> (dot) will not be executed.
+ * Version:      1.3.0
  * Plugin URI:   https://github.com/luizbills/4-snippets
  * Author:       Luiz Bills
  * Author URI:   https://github.com/luizbills
@@ -44,7 +44,6 @@ final class Plugin_4_Snippets {
 		if ( ! file_exists( $snippets_dir ) ) return;
 
 		$files = $this->get_snippets_files( $snippets_dir );
-
 		foreach ( $files as $filepath ) {
 			include $filepath;
 		}
@@ -92,7 +91,10 @@ final class Plugin_4_Snippets {
 		foreach( $files as $filename ) {
 			if ( '.' === $filename ) continue;
 			if ( '..' === $filename ) continue;
-			if ( '_' === substr( $filename, 0, 1 ) ) continue;
+
+			$first_char = substr( $filename, 0, 1 );
+			if ( '_' === $first_char ) continue;
+			if ( '.' === $first_char ) continue;
 
 			$path = path_join( $dir, $filename );
 
