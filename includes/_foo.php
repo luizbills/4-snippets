@@ -1,5 +1,5 @@
 <?php
 
-/* Files with underscore or dot at begining will not be executed */
+/* Files that starts with underscore or dot will not be executed */
 
 err_log( pathinfo( __FILE__, PATHINFO_BASENAME ) . ' included' );
