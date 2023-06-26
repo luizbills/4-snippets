@@ -1,7 +1,10 @@
 <?php
 
-if ( ! function_exists( 'dd' ) ) :
+if ( file_exists( Plugin_4_Snippets::DIR . '/vendor/autoload.php' ) ) {
+    include Plugin_4_Snippets::DIR . '/vendor/autoload.php';
+}
 
+if ( ! function_exists( 'dd' ) ) :
 /**
  * @param mixed ...$values
  * @return never
@@ -15,11 +18,9 @@ function dd ( ...$values ) {
     }
     die;
 }
-
 endif;
 
 if ( ! function_exists( 'err_log' ) ) :
-
 /**
  * @param mixed ...$values
  * @return void
@@ -32,5 +33,4 @@ function err_log ( ...$values ) {
         error_log( trim( ob_get_clean() ) );
     }
 }
-
 endif;
