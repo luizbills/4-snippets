@@ -1,9 +1,5 @@
 <?php
 
-if ( file_exists( Plugin_4_Snippets::DIR . '/vendor/autoload.php' ) ) {
-    include Plugin_4_Snippets::DIR . '/vendor/autoload.php';
-}
-
 if ( ! function_exists( 'dd' ) ) :
 /**
  * @param mixed ...$values
