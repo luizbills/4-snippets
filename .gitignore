@@ -1,4 +1,1 @@
-/includes/*
-!/includes/bar.php
-!/includes/_foo.php
 /vendor/
