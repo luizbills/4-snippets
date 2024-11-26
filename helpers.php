@@ -2,8 +2,8 @@
 
 if ( ! function_exists( 'dd' ) ) :
 /**
- * @param mixed ...$values
- * @return never
+ * @param   mixed ...$values
+ * @return  never|void
  */
 function dd ( ...$values ) {
     if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) return;
@@ -18,8 +18,8 @@ endif;
 
 if ( ! function_exists( 'err_log' ) ) :
 /**
- * @param mixed ...$values
- * @return void
+ * @param   mixed ...$values
+ * @return  void
  */
 function err_log ( ...$values ) {
     if ( ! defined( 'WP_DEBUG_LOG' ) || ! WP_DEBUG_LOG ) return;
